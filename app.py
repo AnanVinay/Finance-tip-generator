@@ -11,7 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 
 chat_model = ChatGoogleGenerativeAI(
-    model="models/gemini-1.5-flash",  
+    model="models/gemini-1.5-flash",
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
@@ -20,11 +20,24 @@ embeddings = GoogleGenerativeAIEmbeddings(
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
-db = FAISS.from_texts(["Initial dummy text to setup FAISS"], embedding=embeddings)
-
-
 text_splitter = CharacterTextSplitter(chunk_size=200, chunk_overlap=20)
 
+def load_finance_examples(file_path="finance_examples.txt"):
+    if not os.path.exists(file_path):
+        print(f"Warning: {file_path} not found. Starting with empty FAISS index.")
+        return []
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        text = f.read()
+    return text_splitter.split_text(text)
+
+# Initialize FAISS with finance example texts
+example_texts = load_finance_examples()
+
+if example_texts:
+    db = FAISS.from_texts(example_texts, embedding=embeddings)
+else:
+    db = FAISS.from_texts(["Initial dummy text to setup FAISS"], embedding=embeddings)
 
 def get_finance_tips_with_rag(income, expenses, savings_goal):
     user_query = f"Income: {income}, Expenses: {expenses}, Savings Goal: {savings_goal}"
