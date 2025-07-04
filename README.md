@@ -3,7 +3,7 @@
 An AI-powered finance advice application that provides personalized budgeting and saving tips based on your income, expenses, and savings goals. Built with Google Gemini and LangChain, this app delivers actionable, context-aware financial advice through a simple Streamlit interface.
 
 🔗 **[Live Demo](#)**
-*(Add your live demo link here; note that the application may take a moment to start due to hosting constraints.)*
+*(https://finance-tip-generator-me3kfx3svn5fnawtqna77s.streamlit.app/)*
 
 ## Features
 
