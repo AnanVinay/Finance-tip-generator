@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.schema import HumanMessage
@@ -7,8 +7,6 @@ from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import CharacterTextSplitter
 
 load_dotenv()
-
-app = Flask(__name__)
 
 chat_model = ChatGoogleGenerativeAI(
     model="models/gemini-1.5-flash",
@@ -31,7 +29,7 @@ def load_finance_examples(file_path="finance_examples.txt"):
         text = f.read()
     return text_splitter.split_text(text)
 
-# Initialize FAISS with finance example texts
+# Initialize FAISS with finance examples
 example_texts = load_finance_examples()
 
 if example_texts:
@@ -57,7 +55,6 @@ def get_finance_tips_with_rag(income, expenses, savings_goal):
         f"Provide 3 actionable, personalized finance tips to improve budgeting or saving."
     )
 
-    # Use chat_model with HumanMessage
     response = chat_model([HumanMessage(content=prompt)])
     ai_tips = response.content.strip()
 
@@ -67,18 +64,19 @@ def get_finance_tips_with_rag(income, expenses, savings_goal):
 
     return ai_tips
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    ai_tips = ""
-    if request.method == "POST":
-        income = float(request.form["income"])
-        expenses = float(request.form["expenses"])
-        savings_goal = float(request.form["savings_goal"])
+# Streamlit UI
+st.title("💡 AI-Powered Personal Finance Tips")
 
+with st.form("finance_form"):
+    income = st.number_input("Monthly Income", min_value=0.0, format="%.2f")
+    expenses = st.number_input("Monthly Expenses", min_value=0.0, format="%.2f")
+    savings_goal = st.number_input("Monthly Savings Goal", min_value=0.0, format="%.2f")
+    submitted = st.form_submit_button("Get AI Tips")
+
+if submitted:
+    if income and expenses and savings_goal:
         ai_tips = get_finance_tips_with_rag(income, expenses, savings_goal)
-
-    return render_template("index.html", ai_tips=ai_tips)
-
-if __name__ == "__main__":
-    # Listen on all interfaces, use PORT from env or default 5000
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
+        st.success("Your Personalized Tips:")
+        st.info(ai_tips)
+    else:
+        st.warning("Please fill in all fields.")
