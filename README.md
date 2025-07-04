@@ -1,34 +1,31 @@
-# Personal Finance Tip Generator
+# AI Finance Tips Generator
 
-An AI-powered finance advice application that provides simple budgeting and savings suggestions based on your income, expenses, and financial goals. Built with Google Gemini, LangChain, and FAISS, this app offers personalized, context-aware financial tips to help users better manage their money.
+An AI-powered finance advice application that provides personalized budgeting and saving tips based on your income, expenses, and savings goals. Built with Google Gemini and LangChain, this app delivers actionable, context-aware financial advice through a simple Streamlit interface.
 
-🔗 **[Live Demo](https://your-finance-app-url.onrender.com/)** (Note: The application may take up to 50 seconds to load due to hosting constraints on the free tier.)
+🔗 **[Live Demo](#)**
+*(https://finance-tip-generator-me3kfx3svn5fnawtqna77s.streamlit.app/)*
 
 ## Features
 
-- **AI-Generated Financial Advice**: Receive actionable, personalized budgeting and saving suggestions.  
-- **Context-Aware Recommendations**: Utilizes a RAG (Retrieval-Augmented Generation) approach with finance examples to improve tip relevance.  
-- **Simple Web Interface**: Enter income, expenses, and savings goal to get immediate suggestions.  
-- **Responsive UI**: Clean, mobile-friendly interface built with Bootstrap.  
-- **Secure API Management**: Keeps API keys protected using environment variables.  
-- **Fast & Extensible**: Lightweight, Flask-based backend, easy to deploy and scale.  
+- **Personalized Finance Tips**: Get 3 tailored, actionable budgeting and saving suggestions.
+- **Context-Aware Recommendations**: Uses LangChain with Google Gemini for relevant advice.
+- **Clean & Interactive UI**: Enter your monthly income, expenses, and savings goal easily.
+- **Fast & Lightweight**: Streamlit-based for rapid responsiveness and easy deployment.
+- **Secure API Key Handling**: Environment variables keep your API keys safe.
 
 ## Tech Stack
 
-- **Frontend**: HTML, CSS (Bootstrap)  
-- **Backend**: Python, Flask  
-- **AI/LLM**: Google Gemini (`gemini-1.5-flash-001`) via LangChain  
-- **Embeddings**: `models/embedding-001` via `GoogleGenerativeAIEmbeddings`  
-- **Vector Store**: FAISS (for RAG)  
-- **Environment Management**: `python-dotenv`  
+- **Frontend & Backend**: Python, Streamlit
+- **AI/LLM**: Google Gemini (`gemini-1.5-flash`) via LangChain
+- **Environment Management**: `python-dotenv`
 
 ## Installation & Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/finance-tip-generator.git
-cd finance-tip-generator
+git clone https://github.com/your-username/ai-finance-tips-manager.git
+cd ai-finance-tips-manager
 ```
 
 ### 2. Create and Activate a Virtual Environment
@@ -55,78 +52,71 @@ pip install -r requirements.txt
 
 ### 4. Set Up Environment Variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root with:
 
 ```bash
 GOOGLE_API_KEY=your_google_api_key
-PORT=5000
 ```
 
-### 5. (Optional) Add Finance Examples
+Replace `your_google_api_key` with your actual Google Cloud API key that has access to Gemini.
 
-You can create a `finance_examples.txt` file with budgeting and saving examples to improve AI responses.
+### 5. Running the App
 
-Example format for `finance_examples.txt`:
+```bash
+streamlit run app.py
+```
+
+Open your browser and visit [http://localhost:8501](http://localhost:8501)
+
+---
+
+## Sample Finance Tips Format
+
+The app outputs tips like:
 
 ```
 [Basic Budget Tip]
-  Allocate at least 20% of your monthly income towards savings and investments.
+Allocate at least 20% of your monthly income towards savings and investments.
 
-[Savings Motivation Example]
-  Building an emergency fund with 3-6 months of expenses provides financial security.
+[Savings Motivation]
+Building an emergency fund with 3-6 months of expenses provides financial security.
 
 [Expense Reduction Suggestion]
-  Track subscription services and cancel those you rarely use to free up extra cash.
+Track subscription services and cancel those you rarely use to free up extra cash.
 ```
 
-### 6. Running the App
-
-```bash
-python app.py
-```
-
-Visit the app at: [http://localhost:5000](http://localhost:5000)
+---
 
 ## File Structure
 
 ```
-├── app.py                    # Main Flask application
-├── templates/                # HTML templates (index.html)
-├── static/                   # CSS or JS assets
-├── finance_examples.txt      # (Optional) RAG example data
-├── .env                      # Environment variables
-├── requirements.txt          # Python dependencies
-└── README.md                 # Project documentation
+├── app.py                  # Main Streamlit application
+├── requirements.txt        # Python dependencies
+├── .env                    # Environment variables (ignored by git)
+├── .gitignore              # Git ignore rules
+├── example.txt             # Sample finance tips (optional)
+└── README.md               # Project documentation
 ```
 
-## Dependencies
-
-- Flask  
-- python-dotenv  
-- langchain  
-- google-generativeai  
-- faiss-cpu  
-- numpy  
-
-### Install them all with:
-
-```bash
-pip install -r requirements.txt
-```
+---
 
 ## Troubleshooting
 
-- **API Key Error**: Ensure `GOOGLE_API_KEY` is correct and has access to Gemini.  
-- **FAISS Installation Issues**: If errors occur, reinstall `faiss-cpu` or switch to `faiss-gpu` if your system supports it.  
-- **Port Conflict**: Modify the `PORT` value in `.env` if `5000` is in use.  
+- **API Key Issues**: Verify that your `GOOGLE_API_KEY` is valid and has access to Gemini.
+- **Dependency Issues**: Run `pip install -r requirements.txt` to install required packages.
+- **Port Conflicts**: Streamlit runs on port 8501 by default; change it with `--server.port` if needed.
+
+---
 
 ## How It Works
 
-1. Finance examples from `finance_examples.txt` (if provided) are loaded and chunked using `CharacterTextSplitter`.  
-2. Chunks are embedded using `GoogleGenerativeAIEmbeddings` and stored in FAISS for fast similarity search.  
-3. User submits financial inputs via the form.  
-4. Relevant examples + user input are sent to Gemini using a structured prompt.  
-5. Gemini generates personalized finance advice displayed to the user.  
+1. User inputs monthly income, expenses, and savings goal.
+2. The app builds a prompt incorporating this data.
+3. Prompt is sent to Google Gemini via LangChain’s `ChatGoogleGenerativeAI`.
+4. Gemini returns personalized finance tips.
+5. Tips are displayed in the Streamlit UI.
+
+---
 
 ## License
 
