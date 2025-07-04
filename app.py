@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
-from langchain.prompts import ChatPromptTemplate
+from langchain.schema import HumanMessage
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import CharacterTextSplitter
 
@@ -57,8 +57,8 @@ def get_finance_tips_with_rag(income, expenses, savings_goal):
         f"Provide 3 actionable, personalized finance tips to improve budgeting or saving."
     )
 
-    chain = ChatPromptTemplate.from_messages([("user", prompt)]) | chat_model
-    response = chain.invoke({})
+    # Use chat_model with HumanMessage
+    response = chat_model([HumanMessage(content=prompt)])
     ai_tips = response.content.strip()
 
     combined_text = f"User Details: {user_query}\nAI Tips: {ai_tips}"
@@ -80,4 +80,5 @@ def index():
     return render_template("index.html", ai_tips=ai_tips)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Listen on all interfaces, use PORT from env or default 5000
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
